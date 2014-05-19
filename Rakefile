@@ -23,18 +23,15 @@ desc "Build HTMLs of all documents."
 task :html => HTMLS
  
 desc "Build PDFs of all documents."
-task :pdf => PDFS
+task :pdf do |t|
+  sh "pandoc #{OPTS} #{MDFILES} -o doc.pdf"
+end
 
 desc "Build DOCXs of all documents."
 task :docx => DOCX
 
 # Build HTMLs from Markdown source
 rule ".html" => ".md" do |t|
-  sh "pandoc #{OPTS} #{t.source} -o #{t.name}"
-end
-
-# Build PDFs from Markdown source
-rule ".pdf" => ".md" do |t|
   sh "pandoc #{OPTS} #{t.source} -o #{t.name}"
 end
 
