@@ -5,24 +5,28 @@ require "rake/clean"
 IN_DIR = "src"
 MDFILES = FileList["#{IN_DIR}/*.md"]
 PDF = "Doc.pdf"
+INDEX = "index.html"
 HTMLS = MDFILES.ext(".html")
 
-OPTS = "-s"
+OPTS = "-s --chapters"
 
 CLEAN.include(FileList["tex2pdf**"])
-CLOBBER.include(HTMLS, PDF)
+CLOBBER.include(INDEX, HTMLS, PDF)
 
 desc "Build all documents in all formats."
-task :default => [IN_DIR, :pdf, :html]
-
-directory "temp"
+task :default => [IN_DIR, :index, :htmls, :pdf]
 
 desc "Build HTMLs of all documents."
-task :html => HTMLS
+task :htmls => HTMLS
  
-desc "Build PDFs of all documents."
+desc "Build one PDF of all documents."
 task :pdf do |t|
   sh "pandoc --latex-engine=xelatex #{OPTS} #{MDFILES} -o #{PDF}"
+end
+
+desc "Build one HTML of all documents."
+task :index do |t|
+  sh "pandoc #{OPTS} #{MDFILES} -o #{INDEX}"
 end
 
 # Build HTMLs from Markdown source
