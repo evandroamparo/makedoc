@@ -2,44 +2,30 @@
 require "rake/clean"
 
 # Define inputs and outputs
-MDFILES = FileList["*.md"]
-PDFS = MDFILES.ext(".pdf")
-DOCX = MDFILES.ext(".docx")
+IN_DIR = "src"
+MDFILES = FileList["#{IN_DIR}/*.md"]
+PDF = "doc.pdf"
 HTMLS = MDFILES.ext(".html")
 
-OPTS = '-s'
-OUT_DIR = "output"
-PDF_OUT = "#{OUT_DIR}/pdf"
+OPTS = "-s"
 
-# Clobber only PDFs and DOCXs we've generated
-CLOBBER.include(HTMLS, PDFS, DOCX, OUT_DIR)
-
-# Define bibliography and CSL files
-BIB = "/Users/lmullen/acad/research/bib/master.bib"
-CSL = "chicago-mullen.csl"
-
-directory PDF_OUT
+CLEAN.include(FileList["tex2pdf**"])
+CLOBBER.include(HTMLS, PDF)
 
 desc "Build all documents in all formats."
-task :default => [:pdf, :docx, :html]
+task :default => [IN_DIR, :pdf, :html]
+
+directory "temp"
 
 desc "Build HTMLs of all documents."
 task :html => HTMLS
  
 desc "Build PDFs of all documents."
-task :pdf => PDF_OUT do |t|
-  sh "pandoc #{OPTS} #{MDFILES} -o #{OUT_DIR}/pdf/doc.pdf"
+task :pdf do |t|
+  sh "pandoc --latex-engine=xelatex #{OPTS} #{MDFILES} -o doc.pdf"
 end
-
-desc "Build DOCXs of all documents."
-task :docx => DOCX
 
 # Build HTMLs from Markdown source
 rule ".html" => ".md" do |t|
-  sh "pandoc #{OPTS} #{t.source} -o #{t.name}"
-end
-
-# Build DOCXs from Markdown source
-rule ".docx" => ".md" do |t|
   sh "pandoc #{OPTS} #{t.source} -o #{t.name}"
 end
