@@ -4,7 +4,7 @@ require "rake/clean"
 # Define inputs and outputs
 IN_DIR = "src"
 MDFILES = FileList["#{IN_DIR}/*.md"]
-PDF = "doc.pdf"
+PDF = "Doc.pdf"
 HTMLS = MDFILES.ext(".html")
 
 OPTS = "-s"
@@ -22,7 +22,7 @@ task :html => HTMLS
  
 desc "Build PDFs of all documents."
 task :pdf do |t|
-  sh "pandoc --latex-engine=xelatex #{OPTS} #{MDFILES} -o doc.pdf"
+  sh "pandoc --latex-engine=xelatex #{OPTS} #{MDFILES} -o #{PDF}"
 end
 
 # Build HTMLs from Markdown source
