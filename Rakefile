@@ -12,7 +12,7 @@ HTMLS = MDFILES.ext(".html")
 OPTS = "-s"
 
 CLEAN.include(FileList["tex2pdf**"])
-CLOBBER.include(build)
+CLOBBER.include(build.to_s)
 
 desc "Build all documents in all formats."
 task :default => [src, :index, :htmls, :pdf]
